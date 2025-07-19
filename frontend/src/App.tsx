@@ -1,5 +1,4 @@
-
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -10,29 +9,36 @@ import { NotesProvider } from "@/contexts/NotesContext";
 import { CommandPaletteProvider } from "@/contexts/CommandPaletteContext";
 import MainLayout from "@/layouts/MainLayout";
 import NotFound from "./pages/NotFound";
+import { LoginPaletteProvider } from "@/contexts/LoginPaletteContext"; // Import the LoginPaletteProvider
+import { LoginPalette } from "@/components/LoginPalette"; // Import the LoginPalette component
 
 const queryClient = new QueryClient();
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <NotesProvider>
-          <CommandPaletteProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<MainLayout />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </TooltipProvider>
-          </CommandPaletteProvider>
-        </NotesProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <NotesProvider>
+            <CommandPaletteProvider>
+              <LoginPaletteProvider> {/* Wrap with LoginPaletteProvider */}
+                <TooltipProvider>
+                  <Toaster />
+                  <Sonner />
+
+                  <BrowserRouter>
+                    <Routes>
+                      <Route path="/" element={<MainLayout />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </BrowserRouter>
+
+                  <LoginPalette  />
+                </TooltipProvider>
+              </LoginPaletteProvider>
+            </CommandPaletteProvider>
+          </NotesProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
   );
 };
 
