@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import {loginUser, logoutUser} from "@/apis/Apis.tsx";
+
 
 interface LoginPaletteContextType {
     isOpen: boolean;
     openLoginPalette: () => void;
     closeLoginPalette: () => void;
     isLoggedIn: boolean;
-    login: (email: string, password: string) => boolean;
+    login: (email: string, password: string) => Promise<boolean>;
     logout: () => void;
 }
 
@@ -24,17 +26,27 @@ export const LoginPaletteProvider = ({ children }: LoginPaletteProviderProps) =>
     const closeLoginPalette = () => setIsOpen(false);
 
     // Mock login/logout functions
-    const login = (email: string, password: string) => {
+    const login = async (email: string, password: string) => {
         // Add real auth logic here (e.g., API call)
-        if (email && password) {
+        try {
+            const token = await loginUser(email, password);
             setIsLoggedIn(true);
             closeLoginPalette();
             return true;
+
+        } catch (err) {
+            console.error("Login failed", err);
+            return false;
         }
-        return false;
+
+
     };
 
-    const logout = () => setIsLoggedIn(false);
+    const logout = () => {
+        logoutUser();
+        setIsLoggedIn(false);
+        closeLoginPalette();
+    }
 
     // Keyboard shortcuts (optional)
     React.useEffect(() => {

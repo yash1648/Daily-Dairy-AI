@@ -49,7 +49,7 @@ public class SecurityConfig {
                         .sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                 auth->auth
-                        .requestMatchers("/api/auth/signin", "/api/auth/signup").permitAll()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/auth/user").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()

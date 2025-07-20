@@ -104,6 +104,10 @@ public class UserService {
         User user = User.builder().username(signupRequest.getUsername()).
                 password(passwordEncoder.encode(signupRequest.getPassword())).
                 role(Role.USER).
+                enabled(true)
+                        .accountNonExpired(true)
+                                .accountNonLocked(true)
+                                        .credentialsNonExpired(true).
                 build();
 
 
