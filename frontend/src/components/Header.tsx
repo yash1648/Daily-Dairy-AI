@@ -63,7 +63,7 @@ const Header: React.FC = () => {
               size="icon"
               onClick= { openLoginPalette}
           >
-            {isLoggedIn ? <Fingerprint/> :  <UserCheck/>}
+            {isLoggedIn ? <UserCheck/> :  <Fingerprint/>}
           </Button>
         </div>
       </div>
