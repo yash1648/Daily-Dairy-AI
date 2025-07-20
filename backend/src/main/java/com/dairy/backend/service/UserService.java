@@ -1,68 +1,116 @@
 package com.dairy.backend.service;
 
 
-import com.dairy.backend.model.LoginResponse;
-import com.dairy.backend.model.Users;
-import com.dairy.backend.model.UserDTO;
+import com.dairy.backend.model.*;
 import com.dairy.backend.repository.UserRepository;
-import org.apache.catalina.User;
+import com.dairy.backend.security.CustomUserDetailsService;
+import com.dairy.backend.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
-import static org.springframework.http.ResponseEntity.ok;
 
 @Service
 public class UserService {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserRepository userRepository;
 
-    public ResponseEntity<LoginResponse> login(UserDTO user) {
-        if (user == null || user.getUsername() == null || user.getPassword() == null) {
-            return ResponseEntity.badRequest().build();
-        }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-        Optional<Users> optionalUser = userRepository.findByUsername(user.getUsername()).stream().findFirst();
+    @Autowired
+    private JwtUtil jwtUtil;
 
-        if (optionalUser.isEmpty()) {
-            // User doesn't exist – create a new one
-            Users newUser = Users.builder().username(user.getUsername()).password(user.getPassword()).build();
-            userRepository.save(newUser);
-            // TODO: Generate JWT Token for new user
-            String token = "tokebntobe generated";
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
 
-            return ResponseEntity.ok(LoginResponse.builder().token(token).build());
-        }
 
-        Users u = optionalUser.get();
 
-        // If you're not using BCrypt yet, this is a basic match:
-        if (!u.getPassword().equals(user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
 
-            // TODO: Replace with real token generation later
-            String token = "PlaceholderToken";
 
-            return ResponseEntity.ok(LoginResponse.builder()
-                    .token(token)
+
+
+    public LoginResponse login(LoginRequest loginRequest) {
+        Optional<User> userOptional = userRepository.findByUsername(loginRequest.getUsername());
+        if (userOptional.isEmpty()) {
+            // User doesn't exist, create new user automatically
+            User newUser = signup(SignupRequest.builder()
+                    .username(loginRequest.getUsername())
+                    .password(loginRequest.getPassword())
+
                     .build());
 
+            // Generate token for new user
+            UserDetails userDetails = userDetailsService.loadUserByUsername(newUser.getUsername());
+            String token = jwtUtil.generateToken(userDetails);
 
+            return LoginResponse.builder()
+                    .token(token)
+                    .id(newUser.getId())
+                    .username(newUser.getUsername())
+
+                    .role(newUser.getRole().name())
+                    .build();
+        }
+
+        try {
+            // Authenticate user
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword())
+            );
+
+            // Load user details
+            UserDetails userDetails = userDetailsService.loadUserByUsername(loginRequest.getUsername());
+
+            // Generate JWT token
+            String token = jwtUtil.generateToken(userDetails);
+
+            // Get user info
+            User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+
+            return LoginResponse.builder()
+                    .token(token)
+                    .id(user.getId())
+                    .username(user.getUsername())
+                    .role(user.getRole().name()).build();
+
+        } catch (BadCredentialsException e) {
+            throw new BadCredentialsException("Invalid username or password", e);
+
+        }
     }
 
-    public ResponseEntity<UserDTO> getUser(String username) {
-        Users u=userRepository.findByUsername(username).stream().findFirst().get();
-        UserDTO user=new UserDTO();
-        user.setUsername(u.getUsername());
-        user.setPassword(u.getPassword());
-        return ResponseEntity.ok(user);
+    public User signup(SignupRequest signupRequest) {
+        // Check if username exists
+        if (userRepository.existsByUsername(signupRequest.getUsername())) {
+            throw new RuntimeException("Username is already taken!");
+        }
+
+
+        // Create new user
+        User user = User.builder().username(signupRequest.getUsername()).
+                password(passwordEncoder.encode(signupRequest.getPassword())).
+                role(Role.USER).
+                build();
+
+
+
+        return userRepository.save(user);
     }
-
-
-
 }
+
+
+
