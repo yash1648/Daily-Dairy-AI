@@ -1,6 +1,9 @@
 package com.dairy.backend.service;
 
 
+import com.dairy.backend.dto.LoginRequest;
+import com.dairy.backend.dto.LoginResponse;
+import com.dairy.backend.dto.SignupRequest;
 import com.dairy.backend.model.*;
 import com.dairy.backend.repository.UserRepository;
 import com.dairy.backend.security.CustomUserDetailsService;

@@ -1,4 +1,4 @@
-package com.dairy.backend.model;
+package com.dairy.backend.dto;
 
 public class UserInfoResponse {
     private Long id;

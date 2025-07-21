@@ -1,4 +1,4 @@
-package com.dairy.backend.model;
+package com.dairy.backend.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

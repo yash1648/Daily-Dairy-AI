@@ -1,11 +1,15 @@
 package com.dairy.backend.security;
 
+import com.dairy.backend.model.User;
+import com.dairy.backend.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,6 +21,10 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtil {
+
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Value("${jwt.secret}")
     private String secret;
@@ -32,6 +40,10 @@ public class JwtUtil {
     //extract username from token
     public String extractUsername(String token) {
         return extractClaims(token, Claims::getSubject);
+    }
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("userId", Long.class);
     }
 
     //Extract Expiration Date
@@ -61,12 +73,17 @@ public class JwtUtil {
 
     //Generate new token
     public String generateToken(UserDetails userDetails){
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
         Map<String, Object> claims=new HashMap<>();
+        claims.put("userId", user.getId());
         return createToken(claims,userDetails.getUsername());
     }
 
     //Create token with claims and subject
     private String createToken(Map<String, Object> claims, String subject) {
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
