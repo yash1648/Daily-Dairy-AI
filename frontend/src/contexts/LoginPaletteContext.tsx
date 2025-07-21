@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 import {loginUser, logoutUser} from "@/apis/Apis.tsx";
+import {useGlobalAlert} from "@/contexts/AlertContext.tsx";
 
 
 interface LoginPaletteContextType {
@@ -20,7 +21,7 @@ interface LoginPaletteProviderProps {
 export const LoginPaletteProvider = ({ children }: LoginPaletteProviderProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    const { showAlert } = useGlobalAlert(); // 👈 inject
     // Open/close functions
     const openLoginPalette = () => setIsOpen(true);
     const closeLoginPalette = () => setIsOpen(false);
@@ -30,22 +31,31 @@ export const LoginPaletteProvider = ({ children }: LoginPaletteProviderProps) =>
         // Add real auth logic here (e.g., API call)
         try {
             const token = await loginUser(email, password);
+
             setIsLoggedIn(true);
             closeLoginPalette();
+            showAlert({
+                title: "Login Successful",
+                message: `Welcome ${email} !`,
+                variant: "default",
+            });
             return true;
 
         } catch (err) {
             console.error("Login failed", err);
             return false;
         }
-
-
     };
 
     const logout = () => {
         logoutUser();
         setIsLoggedIn(false);
         closeLoginPalette();
+        showAlert({
+            title: "Logout Successful",
+            message: "See you again !",
+            variant: "default",
+        });
     }
 
     // Keyboard shortcuts (optional)

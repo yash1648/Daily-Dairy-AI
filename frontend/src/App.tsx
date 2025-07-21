@@ -10,7 +10,8 @@ import { CommandPaletteProvider } from "@/contexts/CommandPaletteContext";
 import MainLayout from "@/layouts/MainLayout";
 import NotFound from "./pages/NotFound";
 import { LoginPaletteProvider } from "@/contexts/LoginPaletteContext"; // Import the LoginPaletteProvider
-import { LoginPalette } from "@/components/LoginPalette"; // Import the LoginPalette component
+import { LoginPalette } from "@/components/LoginPalette";
+import {AlertProvider} from "@/contexts/AlertContext.tsx"; // Import the LoginPalette component
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ const App = () => {
   return (
       <QueryClientProvider client={queryClient}>
         <ThemeProvider>
+          <AlertProvider>
           <NotesProvider>
             <CommandPaletteProvider>
               <LoginPaletteProvider> {/* Wrap with LoginPaletteProvider */}
@@ -37,6 +39,8 @@ const App = () => {
               </LoginPaletteProvider>
             </CommandPaletteProvider>
           </NotesProvider>
+          </AlertProvider>
+
         </ThemeProvider>
       </QueryClientProvider>
   );

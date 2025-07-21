@@ -1,9 +1,10 @@
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Lock, Mail } from 'lucide-react';
+import {CheckCircle, Lock, Mail} from 'lucide-react';
 import { useLoginPalette } from '@/contexts/LoginPaletteContext';
-import {useState} from "react";
+import {useEffect, useState} from "react";
+
 
 export const LoginPalette = () => {
     const { isOpen, closeLoginPalette, login, isLoggedIn, logout } = useLoginPalette();
@@ -15,12 +16,13 @@ export const LoginPalette = () => {
         login(email, password);
     };
 
+
     return (
         <Dialog open={isOpen} onOpenChange={closeLoginPalette}>
             <DialogContent className="max-w-sm">
                 <div className="space-y-6">
                     <div className="text-center space-y-2">
-                        <h2 className="text-2xl font-bold">Welcome back!</h2>
+                        <h2 className="text-2xl font-bold">Welcome 😁</h2>
                         <p className="text-muted-foreground">
                             {isLoggedIn ? 'You are logged in.' : 'Sign in to continue.'}
                         </p>
@@ -62,6 +64,7 @@ export const LoginPalette = () => {
                                 Sign In
                             </Button>
                         </form>
+
                     ) : (
                         <Button
                             onClick={logout}
@@ -74,5 +77,6 @@ export const LoginPalette = () => {
                 </div>
             </DialogContent>
         </Dialog>
+
     );
 };
