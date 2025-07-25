@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import {loginUser, logoutUser} from "@/apis/Apis.tsx";
+import {authService, loginUser, logoutUser} from "@/apis/Apis.tsx";
 import {useGlobalAlert} from "@/contexts/AlertContext.tsx";
 
 
@@ -30,8 +30,13 @@ export const LoginPaletteProvider = ({ children }: LoginPaletteProviderProps) =>
     const login = async (email: string, password: string) => {
         // Add real auth logic here (e.g., API call)
         try {
-            const token = await loginUser(email, password);
-
+            const token = await authService.login(email, password);
+            console.log('Logged in!');
+        } catch (error) {
+            console.error('Login failed:', error.message);
+            setIsOpen(false);
+        }
+        if (authService.isAuthenticated()) {
             setIsLoggedIn(true);
             closeLoginPalette();
             showAlert({
@@ -40,22 +45,21 @@ export const LoginPaletteProvider = ({ children }: LoginPaletteProviderProps) =>
                 variant: "default",
             });
             return true;
-
-        } catch (err) {
-            console.error("Login failed", err);
-            return false;
         }
+
     };
 
     const logout = () => {
-        logoutUser();
-        setIsLoggedIn(false);
-        closeLoginPalette();
-        showAlert({
-            title: "Logout Successful",
-            message: "See you again !",
-            variant: "default",
-        });
+        if(authService.isAuthenticated()) {
+            logoutUser();
+            setIsLoggedIn(false);
+            closeLoginPalette();
+            showAlert({
+                title: "Logout Successful",
+                message: "See you again !",
+                variant: "default",
+            });
+        }
     }
 
     // Keyboard shortcuts (optional)

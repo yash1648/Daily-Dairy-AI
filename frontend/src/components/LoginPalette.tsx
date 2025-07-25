@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import {CheckCircle, Lock, Mail} from 'lucide-react';
 import { useLoginPalette } from '@/contexts/LoginPaletteContext';
 import {useEffect, useState} from "react";
+import {authService} from "@/apis/Apis.tsx";
 
 
 export const LoginPalette = () => {
@@ -24,11 +25,11 @@ export const LoginPalette = () => {
                     <div className="text-center space-y-2">
                         <h2 className="text-2xl font-bold">Welcome 😁</h2>
                         <p className="text-muted-foreground">
-                            {isLoggedIn ? 'You are logged in.' : 'Sign in to continue.'}
+                            {authService.isAuthenticated()? 'You are logged in.' : 'Sign in to continue.'}
                         </p>
                     </div>
 
-                    {!isLoggedIn ? (
+                    {!authService.isAuthenticated() ? (
                         <form onSubmit={handleLogin} className="space-y-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Username</label>
@@ -66,6 +67,7 @@ export const LoginPalette = () => {
                         </form>
 
                     ) : (
+
                         <Button
                             onClick={logout}
                             variant="destructive"

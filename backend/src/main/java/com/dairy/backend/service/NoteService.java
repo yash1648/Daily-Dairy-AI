@@ -37,6 +37,7 @@ public class NoteService {
                 .stream()
                 .map(NoteResponse::new)
                 .collect(Collectors.toList());
+
     }
 
     public Optional<NoteResponse> getNoteById(Long noteId, Long userId) {

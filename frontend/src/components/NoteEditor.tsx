@@ -26,7 +26,7 @@ const NoteEditor: React.FC = () => {
   // Auto-save when input loses focus
   const handleBlur = () => {
     if (currentNote) {
-      updateNote(currentNote.id, { title, content });
+      updateNote(String(currentNote.id), { title, content });
     }
   };
 

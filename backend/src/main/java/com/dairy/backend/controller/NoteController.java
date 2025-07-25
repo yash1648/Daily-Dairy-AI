@@ -22,7 +22,6 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/notes")
-@CrossOrigin(origins = "*")
 public class NoteController {
     @Autowired
     private NoteService noteService;
@@ -53,6 +52,7 @@ public class NoteController {
         try {
             Long userId = getUserIdFromToken(request);
             List<NoteResponse> notes = noteService.getAllNotesByUser(userId);
+
             return ResponseEntity.ok(new ApiResponse<>(true, "Notes retrieved successfully", notes));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -161,6 +161,16 @@ public class NoteController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse<>(false, e.getMessage(), null));
         }
+    }
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public ResponseEntity<Void> handleOptions() {
+        System.out.println("🔍 OPTIONS request received");
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:8080")
+                .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                .header("Access-Control-Allow-Headers", "*")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
     }
 }
 
