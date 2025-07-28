@@ -1,4 +1,4 @@
-
+"use client"
 import React, { useState, useRef, useEffect } from 'react';
 import { Command } from 'cmdk';
 import { Dialog, DialogContent } from '@/components/ui/dialog';

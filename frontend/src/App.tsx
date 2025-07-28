@@ -11,7 +11,7 @@ import MainLayout from "@/layouts/MainLayout";
 import NotFound from "./pages/NotFound";
 import { LoginPaletteProvider } from "@/contexts/LoginPaletteContext"; // Import the LoginPaletteProvider
 import { LoginPalette } from "@/components/LoginPalette";
-import {AlertProvider} from "@/contexts/AlertContext.tsx"; // Import the LoginPalette component
+import {AlertProvider} from "@/contexts/AlertContext.tsx";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +21,7 @@ const App = () => {
         <ThemeProvider>
           <AlertProvider>
           <NotesProvider>
+
             <CommandPaletteProvider>
               <LoginPaletteProvider> {/* Wrap with LoginPaletteProvider */}
                 <TooltipProvider>

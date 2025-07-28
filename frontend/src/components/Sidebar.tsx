@@ -1,3 +1,4 @@
+"use client"
 import React, {useState, useEffect, useCallback, useMemo, useRef} from 'react';
 import {
     ChevronRight,
@@ -24,6 +25,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
+import {useGlobalAlert} from "@/contexts/AlertContext.tsx";
 
 interface SidebarProps {
     isOpen: boolean;
@@ -78,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
     const [isCreating, setIsCreating] = useState(false);
     const searchInputRef = useRef<HTMLInputElement>(null);
-
+    const { showAlert } = useGlobalAlert();
     // Ensure notes is always an array with better error handling
     const safeNotes = useMemo(() => {
         if (!notes) {
@@ -133,6 +135,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
 
     // Enhanced create note with real-time updates and double-click prevention
     const handleCreateNote = useCallback(async () => {
+        const token=localStorage.getItem("token");
+        if(!token){
+            console.log("User not logged in!");
+            showAlert({
+                title: "Please Login",
+                message: "User not logged in!",
+                variant: "destructive"
+            });
+            return;
+        }
         if (isCreating || isLoading) {
             console.log('⚠️ Note creation already in progress');
             return;
