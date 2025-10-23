@@ -2,7 +2,7 @@
 
 **Daily Dairy AI** is an intelligent journaling application designed to help users document their daily thoughts, experiences, and reflections effortlessly. It leverages advanced AI models to generate creative and helpful responses, making journaling more engaging and personalized.
 
-![Daily Dairy AI Logo](./public/logo.svg)
+![Daily Dairy AI Logo](./frontend/public/favicon.ico)
 
 ## 📋 Features
 
@@ -117,3 +117,4 @@ Currently no explicit license. Please contact the repository owner for informati
 ---
 
 **Daily Dairy AI** – Journal smarter, reflect deeper.
+
