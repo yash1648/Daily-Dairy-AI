@@ -2,7 +2,9 @@
 
 **Daily Dairy AI** is an intelligent journaling application designed to help users document their daily thoughts, experiences, and reflections effortlessly. It leverages advanced AI models to generate creative and helpful responses, making journaling more engaging and personalized.
 
-## Features
+![Daily Dairy AI Logo](./public/logo.svg)
+
+## 📋 Features
 
 - **AI-Powered Journaling**: Automatically generate diary entries, creative stories, and reflections using customizable AI prompts.
 - **WebSocket-based Real-Time Interaction**: Communicate with the AI assistant in real-time via authenticated WebSocket sessions.
@@ -10,24 +12,39 @@
 - **Prompt Templates**: Supports multiple prompt templates including custom assistant and creative writing modes.
 - **Admin Session Management**: Track active user sessions for administrative purposes.
 - **Error Handling**: Robust error handling for AI service failures and bad requests.
+- **Modern UI**: Clean, responsive interface built with React and Tailwind CSS.
+- **Data Persistence**: Store journal entries securely with database integration.
 
-## Technologies Used
+## 🛠️ Technologies Used
 
-- **Backend**: Java, Spring Boot, Spring Security
-- **AI Model Integration**: [Spring AI](https://github.com/spring-projects/spring-ai), Ollama (e.g., Gemma3:latest)
-- **Authentication**: JWT, BCrypt
-- **WebSocket**: Spring WebSocket
+### Backend
+- **Java 17+**: Core programming language
+- **Spring Boot**: Application framework
+- **Spring Security**: Authentication and authorization
+- **Spring AI**: AI model integration
+- **Ollama**: Local AI model (e.g., Gemma3:latest)
+- **JWT & BCrypt**: Secure authentication
+- **Spring WebSocket**: Real-time communication
 
-## Getting Started
+### Frontend
+- **React**: UI library
+- **TypeScript**: Type-safe JavaScript
+- **Tailwind CSS**: Utility-first CSS framework
+- **Vite**: Build tool
+- **ShadcnUI**: Component library
+
+## 🚀 Getting Started
+
+For detailed setup instructions, see our [Installation Guide](./docs/INSTALLATION.md).
 
 ### Prerequisites
 
 - Java 17+ (for Spring Boot backend)
 - Ollama AI model (local/remote)
-- Node.js & npm (if frontend is present, not described in backend code)
+- Node.js & npm (for React frontend)
 - Docker (optional, for easier deployment)
 
-### Setup Instructions
+### Quick Start
 
 #### 1. Clone the Repository
 
@@ -36,68 +53,54 @@ git clone https://github.com/yash1648/Daily-Dairy-AI.git
 cd Daily-Dairy-AI
 ```
 
-#### 2. Configure the Backend
-
-- Edit `src/main/resources/application.properties` for your database and AI model configuration.
-- Ensure Ollama AI is running and accessible (see [Ollama documentation](https://ollama.com/)).
-
-#### 3. Build and Run
+#### 2. Set Up Backend
 
 ```bash
+cd backend
 ./mvnw spring-boot:run
 ```
 
-#### 4. API Endpoints
+#### 3. Set Up Frontend
 
-- **POST `/api/ai/generate`**  
-  Generate text using the AI assistant.
-  ```json
-  {
-    "template": "default",
-    "variables": {
-      "domain": "journaling",
-      "format": "paragraph",
-      "keyPoints": "positivity, gratitude",
-      "input": "How was my day?"
-    }
-  }
-  ```
-- **GET `/api/ai/websocket/status`**  
-  Returns current WebSocket session status for the authenticated user.
-
-#### 5. WebSocket Endpoint
-
-Connect to:  
-`ws://<your-server>/ws/ai`  
-Send messages in the format:
-```json
-{
-  "prompt": "Write a happy memory from today.",
-  "templateId": "creative"
-}
+```bash
+cd frontend
+npm install
+npm run dev
 ```
 
-#### 6. Authentication
+## 📚 Documentation
 
-- Signup and login with username/password.
-- JWT tokens are required for authenticated requests.
+- [API Documentation](./docs/API.md): Detailed API endpoints and usage
+- [Backend Documentation](./docs/BACKEND.md): Backend architecture and components
+- [Frontend Documentation](./docs/FRONTEND.md): Frontend architecture and components
+- [Contributing Guidelines](./docs/CONTRIBUTING.md): How to contribute to the project
 
-## Example Usage
+## 🔌 API Endpoints
 
-- **AI Diary Entry**  
-  Send your daily thoughts to `/api/ai/generate` and get a reflective, well-formatted diary entry.
-- **Creative Story**  
-  Use the "creative" template to generate short stories with custom characters, settings, and themes.
+For a complete list of API endpoints, see our [API Documentation](./docs/API.md).
 
-## Customizing Prompt Templates
+Key endpoints:
+- **POST `/api/ai/generate`**: Generate AI-powered journal entries
+- **WebSocket `/ws/ai`**: Real-time AI interaction
 
-Edit `PromptConfig.java` to define your own AI prompt templates for various use cases.
+## 🔒 Security
 
-## Security
+- Passwords are hashed using BCrypt
+- JWT-based authentication secures API and WebSocket sessions
+- HTTPS recommended for production deployment
+- Regular security updates and dependency maintenance
 
-- Passwords are hashed using BCrypt.
-- JWT-based authentication secures API and WebSocket sessions.
-- Admins can view active user sessions for monitoring.
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guidelines](./docs/CONTRIBUTING.md) for details.
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
+
+## 📬 Contact
+
+For questions or support, please open an issue on our GitHub repository.
 
 ## Contributing
 
