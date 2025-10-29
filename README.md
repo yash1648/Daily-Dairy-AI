@@ -46,21 +46,35 @@ For detailed setup instructions, see our [Installation Guide](./docs/INSTALLATIO
 
 ### Quick Start
 
-#### 1. Clone the Repository
+#### Option 1: Using Docker (Recommended)
+
+```bash
+git clone https://github.com/yash1648/Daily-Dairy-AI.git
+cd Daily-Dairy-AI
+docker-compose up -d
+```
+
+This will start the entire application stack (backend, frontend, and Ollama) in Docker containers.
+- Frontend: http://localhost
+- Backend API: http://localhost:8080
+
+#### Option 2: Manual Setup
+
+##### 1. Clone the Repository
 
 ```bash
 git clone https://github.com/yash1648/Daily-Dairy-AI.git
 cd Daily-Dairy-AI
 ```
 
-#### 2. Set Up Backend
+##### 2. Set Up Backend
 
 ```bash
 cd backend
 ./mvnw spring-boot:run
 ```
 
-#### 3. Set Up Frontend
+##### 3. Set Up Frontend
 
 ```bash
 cd frontend

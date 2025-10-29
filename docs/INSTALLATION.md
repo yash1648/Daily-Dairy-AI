@@ -113,9 +113,36 @@ ollama serve
 
 Ollama will start on http://localhost:11434.
 
-## Docker Deployment (Optional)
+## Docker Deployment
 
-### 1. Build Docker Images
+The project includes Docker configuration for easy deployment. You can run the entire application stack (backend, frontend, and Ollama) using Docker Compose.
+
+### 1. Using Pre-configured Docker Compose
+
+A complete `docker-compose.yml` file is already included in the project root. To use it:
+
+```bash
+# Navigate to the project root
+cd Daily-Dairy-AI
+
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop all services
+docker-compose down
+```
+
+The services will be available at:
+- Frontend: http://localhost
+- Backend API: http://localhost:8080
+- Ollama API: http://localhost:11434
+
+### 2. Building Individual Docker Images (Optional)
+
+If you need to build the images separately:
 
 ```bash
 # Build backend image
@@ -127,27 +154,58 @@ cd ../frontend
 docker build -t daily-dairy-frontend .
 ```
 
-### 2. Run with Docker Compose
+### 3. Docker Compose Configuration
 
-Create a `docker-compose.yml` file in the root directory:
+The included `docker-compose.yml` file contains the following configuration:
 
 ```yaml
 version: '3'
+
 services:
   backend:
-    image: daily-dairy-backend
+    build: ./backend
+    container_name: daily-dairy-backend
     ports:
       - "8080:8080"
     environment:
+      - SPRING_PROFILES_ACTIVE=docker
       - SPRING_AI_OLLAMA_BASE_URL=http://ollama:11434
     depends_on:
       - ollama
+    restart: unless-stopped
+    networks:
+      - daily-dairy-network
 
   frontend:
-    image: daily-dairy-frontend
+    build: ./frontend
+    container_name: daily-dairy-frontend
     ports:
-      - "5173:80"
+      - "80:80"
     depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - daily-dairy-network
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: daily-dairy-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    command: serve
+    restart: unless-stopped
+    networks:
+      - daily-dairy-network
+
+networks:
+  daily-dairy-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+```
       - backend
 
   ollama:

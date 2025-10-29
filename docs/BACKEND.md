@@ -1,6 +1,24 @@
+```
 # Backend Documentation
 
 This document provides an overview of the Daily-Dairy-AI backend architecture, components, and implementation details.
+
+## Docker Deployment
+
+The backend can be deployed using Docker. A Dockerfile is provided in the `backend` directory that creates a multi-stage build:
+
+1. **Build stage**: Uses Maven to compile and package the application
+2. **Runtime stage**: Uses a lightweight JRE image to run the application
+
+To build and run the backend using Docker:
+
+```bash
+cd backend
+docker build -t daily-dairy-backend .
+docker run -p 8080:8080 -e SPRING_AI_OLLAMA_BASE_URL=http://ollama:11434 daily-dairy-backend
+```
+
+For complete deployment with all services, use the Docker Compose configuration in the project root.
 
 ## Technology Stack
 

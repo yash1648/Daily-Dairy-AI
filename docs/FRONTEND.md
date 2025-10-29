@@ -1,6 +1,24 @@
+```
 # Frontend Documentation
 
 This document provides an overview of the Daily-Dairy-AI frontend architecture, components, and implementation details.
+
+## Docker Deployment
+
+The frontend can be deployed using Docker. A Dockerfile is provided in the `frontend` directory that creates a multi-stage build:
+
+1. **Build stage**: Uses Node.js to build the React application
+2. **Runtime stage**: Uses Nginx to serve the static files
+
+To build and run the frontend using Docker:
+
+```bash
+cd frontend
+docker build -t daily-dairy-frontend .
+docker run -p 80:80 daily-dairy-frontend
+```
+
+For complete deployment with all services, use the Docker Compose configuration in the project root.
 
 ## Technology Stack
 
